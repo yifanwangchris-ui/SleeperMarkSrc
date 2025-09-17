@@ -1,0 +1,26 @@
+SleeperMark项目中的所有链接：
+
+1. 论文链接：
+   https://arxiv.org/abs/2412.04852
+
+2. PyTorch安装源：
+   https://download.pytorch.org/whl/cu124
+
+3. MS COCO2014数据集：
+   https://cocodataset.org/#download
+
+4. Stage1模型权重下载：
+   https://drive.google.com/drive/folders/1q-CQiqhSkYESqgfRAQC43-Z-CXsXqI2F?usp=sharing
+
+5. Stage2预训练水印模型下载（与Stage1相同链接）：
+   https://drive.google.com/drive/folders/1q-CQiqhSkYESqgfRAQC43-Z-CXsXqI2F?usp=sharing
+   注：这个链接包含Stage1模型权重、秘密消息和残差潜变量
+
+6. Stable-Diffusion-Prompts数据集：
+   https://huggingface.co/datasets/Gustavosta/Stable-Diffusion-Prompts
+
+7. 水印扩散模型unet下载：
+   https://drive.google.com/drive/folders/1OnpVaXC6r1014oOambHETAPcF3-PILlw?usp=sharing
+
+8. Diffusers项目：
+   https://github.com/huggingface/diffusers
