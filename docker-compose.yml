@@ -1,0 +1,84 @@
+version: '3.8'
+
+services:
+  sleepermark:
+    build: .
+    image: sleepermark:latest
+    container_name: sleepermark_container
+    volumes:
+      # 数据持久化
+      - ./data:/app/data
+      - ./downloads:/app/downloads
+      - ./outputs:/app/outputs
+      # SSH密钥（用于传输）
+      - ~/.ssh:/root/.ssh:ro
+      # 云服务配置
+      - ~/.cos.conf:/root/.cos.conf:ro
+      - ~/.aliyun:/root/.aliyun:ro
+    environment:
+      # CUDA设置
+      - NVIDIA_VISIBLE_DEVICES=all
+      - CUDA_VISIBLE_DEVICES=0
+      # 网络优化
+      - HF_ENDPOINT=https://hf-mirror.com
+      - TORCH_HOME=/app/data/.torch
+      # 下载加速
+      - PIP_INDEX_URL=https://pypi.tuna.tsinghua.edu.cn/simple/
+    runtime: nvidia
+    shm_size: 8g
+    stdin_open: true
+    tty: true
+    ports:
+      - "8888:8888"  # Jupyter
+      - "6006:6006"  # TensorBoard
+    command: bash
+    
+  # 可选：数据下载服务
+  data_downloader:
+    build: .
+    image: sleepermark:latest
+    container_name: sleepermark_downloader
+    volumes:
+      - ./downloads:/app/downloads
+      - ~/.cos.conf:/root/.cos.conf:ro
+      - ~/.aliyun:/root/.aliyun:ro
+    environment:
+      - DOWNLOAD_MODE=true
+    command: >
+      bash -c "
+        echo '=== 数据下载服务 ===';
+        if [ -f ./scripts/upload_to_aliyun.sh ]; then
+          echo '使用阿里云下载...';
+          ./downloads/download_from_aliyun.sh;
+        elif [ -f ./scripts/upload_to_tencent.sh ]; then
+          echo '使用腾讯云下载...';
+          ./downloads/download_from_tencent.sh;
+        else
+          echo '请配置云存储下载脚本';
+        fi;
+        echo '下载完成，容器将保持运行状态';
+        tail -f /dev/null
+      "
+    profiles:
+      - download
+
+  # 可选：Web界面
+  jupyter:
+    build: .
+    image: sleepermark:latest
+    container_name: sleepermark_jupyter
+    volumes:
+      - ./:/app/workspace
+      - ./data:/app/data
+    environment:
+      - JUPYTER_ENABLE_LAB=yes
+    ports:
+      - "8888:8888"
+    command: >
+      bash -c "
+        pip install jupyterlab &&
+        jupyter lab --ip=0.0.0.0 --port=8888 --no-browser --allow-root
+          --LabApp.token='' --LabApp.password=''
+      "
+    profiles:
+      - jupyter

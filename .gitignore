@@ -16,7 +16,6 @@ __pycache__/
 build/
 develop-eggs/
 dist/
-downloads/
 eggs/
 .eggs/
 lib/
@@ -59,18 +58,12 @@ venv.bak/
 *.pkl
 *.pickle
 
-# Large download files
-downloads/
-!downloads/README.md
-!downloads/download_instructions.md
-!downloads/download_google_drive.sh
-
-# Dataset files
-*.zip
-*.tar
-*.tar.gz
-*.rar
-*.7z
+# Dataset files (允许downloads文件夹中的大文件)
+# *.zip
+# *.tar
+# *.tar.gz
+# *.rar
+# *.7z
 
 # Log files
 *.log
@@ -81,3 +74,4 @@ wandb/
 *.tmp
 *.temp
 .cache/
+
